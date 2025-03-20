@@ -1,13 +1,11 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
 <suite name="Regression Tests CMS">
-
-    <parameter name="usename" value="test@nakivo.com"></parameter>
-
-    <test name="Login Test CMS" parallel="methods">
-        <parameter name="browser" value="chrome"/>
+    <test name="Login Test CMS">
+        <parameter name="browser" value="firefox"/>
         <classes>
             <class name="com.nakivo.project.testcases.LoginTest"/>
+            <!--            <class name="com.nakivo.project.testcases.ForgotPasswordTest"/>-->
         </classes>
     </test>
 

@@ -1,12 +1,13 @@
 package com.nakivo.project;
 
-import com.nakivo.project.pages.HomePage;
+import com.nakivo.project.pages.DashboardPage;
+import com.nakivo.project.pages.ForgotPasswordPage;
 import com.nakivo.project.pages.LoginPage;
-
 
 public class CommonPage {
     private LoginPage loginPage;
-    private HomePage homePage;
+    private DashboardPage homePage;
+    private ForgotPasswordPage forgotPasswordPage;
 
     public LoginPage getLoginPage() {
         if (loginPage == null) {
@@ -15,10 +16,17 @@ public class CommonPage {
         return loginPage;
     }
 
-    public HomePage getHomePage() {
+    public DashboardPage getDashboardPage() {
         if (homePage == null) {
-            homePage = new HomePage();
+            homePage = new DashboardPage();
         }
         return homePage;
+    }
+
+    public ForgotPasswordPage getForgotPasswordPage() {
+        if (forgotPasswordPage == null) {
+            forgotPasswordPage = new ForgotPasswordPage();
+        }
+        return forgotPasswordPage;
     }
 }

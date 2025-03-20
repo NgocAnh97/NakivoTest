@@ -1,7 +1,8 @@
 package com.nakivo.common;
 
+import com.nakivo.constants.FrameworkConstants;
 import com.nakivo.driver.DriverManager;
-import com.nakivo.utils.LogUtils;
+import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
@@ -12,92 +13,129 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.time.Duration;
+import java.util.Objects;
 
+@Log4j2
 public class BasePage {
-
     public static WebElement getWebElement(By by) {
         return DriverManager.getDriver().findElement(by);
     }
 
     public static void openWebsite(String URL) {
-        sleep(5);
-
         DriverManager.getDriver().get(URL);
         waitForPageLoaded();
 
-        LogUtils.info("Open website with URL: " + URL);
+        log.info("Open website with URL: " + URL);
     }
 
     public static void setText(By by, String value) {
-        waitForElementVisible(by).sendKeys(value);
-        LogUtils.info("Set text " + value + " on " + by.toString());
+        Objects.requireNonNull(waitForElementVisible(by)).sendKeys(value);
+        log.info("Set text " + value + " on " + by.toString());
     }
 
     public static void waitForPageLoaded() {
-        WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(40));
+        WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(FrameworkConstants.WAIT_PAGE_LOADED));
         JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
 
-        // wait for Javascript to loaded
-        ExpectedCondition<Boolean> jsLoad = driver -> ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
+        ExpectedCondition<Boolean> jsLoad = driver -> {
+            assert driver != null;
+            return ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
+        };
 
-        //Get JS is Ready
         boolean jsReady = js.executeScript("return document.readyState").toString().equals("complete");
 
-        //Wait Javascript until it is Ready!
         if (!jsReady) {
-            //LogUtils.info("Javascript in NOT Ready!");
-            //Wait for Javascript to load
             try {
                 wait.until(jsLoad);
             } catch (Throwable error) {
-                LogUtils.error("Timeout waiting for page load. (" + 40 + "s)");
+                log.error("Timeout waiting for page load. (" + 40 + "s)");
                 Assert.fail("Timeout waiting for page load. (" + 40 + "s)");
             }
         }
     }
 
     public static void clickElement(By by) {
-        WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(),
+                Duration.ofSeconds(FrameworkConstants.WAIT_EXPLICIT));
         wait.until(ExpectedConditions.elementToBeClickable(by)).click();
-        LogUtils.info("Clicked on the element " + by.toString());
+        log.info("Click on the element " + by.toString());
     }
 
-    public static boolean verifyElementVisible(By by, String message) {
-        LogUtils.info("Verify element visible " + by);
+    public static void verifyElementVisible(By by, String message) {
+        log.info("Verify element visible " + by);
         try {
-            WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(FrameworkConstants.WAIT_EXPLICIT));
             wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-            return true;
         } catch (Exception e) {
             if (message.isEmpty()) {
-                LogUtils.error("The element is not visible. " + by);
+                log.error("The element is not visible. " + by);
                 Assert.fail("The element is NOT visible. " + by);
             } else {
-                LogUtils.error(message + by);
+                log.error(message + by);
                 Assert.fail(message + by);
             }
-            return false;
         }
+    }
+
+    public static void verifyElementPropertyValue(By by, String propertyName, String propertyValue) {
+        log.info("Verify element property value " + by);
+        waitForElementVisible(by);
+        try {
+            WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(FrameworkConstants.WAIT_EXPLICIT));
+            wait.until(ExpectedConditions.domPropertyToBe(waitForElementPresent(by), propertyName, propertyValue));
+        } catch (Exception e) {
+            log.error("Element: " + by.toString() + ". Not found Property value: "
+                    + propertyValue + " with property name: " + propertyName +
+                    ". Actual get Property value is: " + getProperty(by, propertyName));
+            Assert.fail("Element: " + by.toString() + ". Not found Property value: " + propertyValue +
+                    " with property name: " + propertyName + ". Actual get Property value is: "
+                    + getProperty(by, propertyName));
+        }
+    }
+
+    public static String getProperty(By by, String propertyName) {
+        return getWebElement(by).getDomProperty(propertyName);
+    }
+
+    public static WebElement waitForElementPresent(By by) {
+        try {
+            WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(FrameworkConstants.WAIT_EXPLICIT));
+            return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        } catch (Throwable error) {
+            log.error("Element not exist. (waitForElementPresent) " + by.toString());
+            Assert.fail("Element not exist. (waitForElementPresent) " + by.toString());
+        }
+        return null;
     }
 
     public static WebElement waitForElementVisible(By by) {
         try {
-            WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(),
+                    Duration.ofSeconds(FrameworkConstants.WAIT_EXPLICIT));
 
-            boolean check = isElementVisible(by, 1);
-            if (check) {
-                return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-            } else {
+            boolean check = isElementVisible(by, FrameworkConstants.WAIT_EXPLICIT);
+            if (!check) {
                 scrollToElementAtBottom(by);
-                return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
             }
-
-            //return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (Throwable error) {
-            LogUtils.error("❌ Timeout waiting for the element Visible. " + by.toString());
-            Assert.fail("❌ Timeout waiting for the element Visible. " + by.toString());
+            log.error("Timeout waiting for the element Visible. " + by.toString());
+            Assert.fail("Timeout waiting for the element Visible. " + by.toString());
         }
         return null;
+    }
+
+    public static void verifyElementText(By by, String text) {
+        if (getTextElement(by).trim().equals(text.trim())) {
+            log.info("Verify the element text is as expected " + getTextElement(by));
+        } else {
+            log.error("The element text is not as expected. Expected: " + text + ", Actual: " + getTextElement(by));
+            Assert.fail("The element text is not as expected. Expected: " + text + ", Actual: " + getTextElement(by));
+        }
+    }
+
+    private static String getTextElement(By by) {
+        return Objects.requireNonNull(waitForElementVisible(by)).getText();
     }
 
     public static boolean isElementVisible(By by, int second) {
@@ -113,14 +151,6 @@ public class BasePage {
     public static void scrollToElementAtBottom(By by) {
         JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
         js.executeScript("arguments[0].scrollIntoView(false);", getWebElement(by));
-        LogUtils.info("Scroll to element " + by);
-    }
-
-    public static void sleep(double second) {
-        try {
-            Thread.sleep((long) (second * 1000));
-        } catch (InterruptedException e) {
-            LogUtils.error(e.getMessage());
-        }
+        log.info("Scroll to element " + by);
     }
 }

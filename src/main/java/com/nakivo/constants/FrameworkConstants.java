@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2022 Anh Tester
- * Automation Framework Selenium
- */
 
 package com.nakivo.constants;
 
@@ -18,5 +14,6 @@ public final class FrameworkConstants {
     }
 
     public static final int WAIT_PAGE_LOADED = Integer.parseInt(PropertiesHelpers.getValue("WAIT_PAGE_LOADED"));
+    public static final int WAIT_EXPLICIT = Integer.parseInt(PropertiesHelpers.getValue("WAIT_EXPLICIT"));
     public static final String PROJECT_PATH = SystemHelpers.getCurrentDir();
 }

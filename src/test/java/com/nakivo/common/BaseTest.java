@@ -17,10 +17,10 @@ import static com.nakivo.constants.FrameworkConstants.WAIT_PAGE_LOADED;
 public class BaseTest {
     @Parameters("browser")
     @BeforeMethod
-    public void createDriver(@Optional("chrome") String browser) {
-//        WebDriver driver = getBrowserDriver(browser);
+    public void createDriver(@Optional("firefox") String browser) {
+        WebDriver driver = getBrowserDriver(browser);
 
-        DriverManager.setDriver(new ChromeDriver());
+        DriverManager.setDriver(driver);
         DriverManager.getDriver().manage().window().maximize();
         DriverManager.getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(WAIT_PAGE_LOADED));
     }

@@ -14,69 +14,56 @@ public class LoginTest extends BaseTest {
     }
 
     @Test
-    public void Login_Login() {
-
-        commonPage.getLoginPage().loginSuccess(
-                "test@nakivo.com", "12345");
+    public void Login_1_Load_Successfully() {
+        commonPage.getLoginPage().openLoginPageLoadSuccessfully();
     }
 
     @Test
-    public void Login_LoginSuccess() {
+    public void Login_2a_LoginSuccessWithValidCredentials() {
+        commonPage.getLoginPage().loginSuccess(
+                "nakivo", "123456");
+    }
+
+    @Test
+    public void Login_2b_LoginSuccessWithExcelData() {
         ExcelHelpers excel = new ExcelHelpers();
         excel.setExcelFile(ExcelPath, "Login");
         commonPage.getLoginPage().loginSuccess(
-                excel.getCellData(1, "email"),
+                excel.getCellData(1, "username"),
                 excel.getCellData(1, "password"));
     }
 
     @Test
-    public void Login_LoginFailWithInvalidCredentials() {
+    public void Login_3_LoginFailWithInvalidCredentials() {
         ExcelHelpers excel = new ExcelHelpers();
         excel.setExcelFile(ExcelPath, "Login");
         commonPage.getLoginPage().loginFailWithInvalidCredentials(
-                excel.getCellData(2, "email"),
+                excel.getCellData(2, "username"),
                 excel.getCellData(2, "password"));
-    }
 
-    @Test
-    public void Login_LoginFailWithEmptyCredentials() {
-        ExcelHelpers excel = new ExcelHelpers();
-        excel.setExcelFile(ExcelPath, "Login");
         commonPage.getLoginPage().loginFailWithEmptyCredentials(
-                excel.getCellData(3, "email"));
+                excel.getCellData(3, "username"));
     }
 
     @Test
-    public void Login_LoginFailWithInvalidEmailFormat() {
+    public void Login_0_LoginFailWithEdgeCases() {
         ExcelHelpers excel = new ExcelHelpers();
         excel.setExcelFile(ExcelPath, "Login");
         commonPage.getLoginPage().loginFailWithInvalidEmailFormat(
-                excel.getCellData(4, "email"),
+                excel.getCellData(4, "username"),
                 excel.getCellData(4, "password"));
-    }
 
-    @Test
-    public void Login_LoginFailWithExcessivelyLongEmailAddress() {
-        ExcelHelpers excel = new ExcelHelpers();
-        excel.setExcelFile(ExcelPath, "Login");
         commonPage.getLoginPage().loginFailWithExcessivelyLongEmailAddress(
-                excel.getCellData(5, "email"),
+                excel.getCellData(5, "username"),
                 excel.getCellData(5, "password"));
-    }
 
-    @Test
-    public void Login_LoginFailWithExcessivelyLongPassword() {
-        ExcelHelpers excel = new ExcelHelpers();
-        excel.setExcelFile(ExcelPath, "Login");
         commonPage.getLoginPage().loginFailWithExcessivelyLongPassword(
-                excel.getCellData(6, "email"),
+                excel.getCellData(6, "username"),
                 excel.getCellData(6, "password"));
     }
 
     @Test
-    public void Login_VerifySecurityValidation() {
+    public void Login_5_VerifySecurityValidation() {
         commonPage.getLoginPage().verifyPasswordFieldMasked();
-
-        commonPage.getLoginPage().verifyEmailFieldAcceptOnlyValidEmailFormat();
     }
 }
