@@ -10,7 +10,6 @@ import java.util.Properties;
 
 @Log4j2
 public class PropertiesHelpers {
-
     private static Properties properties;
     private static String linkFile;
     private static FileInputStream file;
