@@ -8,7 +8,6 @@ public class CommonPage {
     private LoginPage loginPage;
     private HomePage homePage;
 
-
     public LoginPage getLoginPage() {
         if (loginPage == null) {
             loginPage = new LoginPage();

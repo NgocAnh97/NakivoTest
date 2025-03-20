@@ -52,8 +52,7 @@ public final class SystemHelpers {
      * @return Get the path to your source directory with a / at the end
      */
     public static String getCurrentDir() {
-        String current = System.getProperty("user.dir") + File.separator;
-        return current;
+        return System.getProperty("user.dir") + File.separator;
     }
 
     /**

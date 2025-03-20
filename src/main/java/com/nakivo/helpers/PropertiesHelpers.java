@@ -23,7 +23,6 @@ public class PropertiesHelpers {
 
     public static Properties loadAllFiles() {
         LinkedList<String> files = new LinkedList<>();
-        // Add tất cả file Properties vào đây theo mẫu
         files.add("src/test/resources/config/config.properties");
         files.add("src/test/resources/config/data.properties");
         files.add("src/test/resources/objects/crm_locators.properties");
@@ -40,7 +39,7 @@ public class PropertiesHelpers {
             }
             file.close();
             LogUtils.info("Loaded all properties files.");
-            //LogUtils.info(properties);
+            LogUtils.info(properties);
             return properties;
         } catch (IOException e) {
             LogUtils.info("Warning !! Can not Load All File.");
@@ -65,15 +64,7 @@ public class PropertiesHelpers {
     }
 
     public static void setDefaultFile() {
-        properties = new Properties();
-        try {
-            linkFile = SystemHelpers.getCurrentDir() + relPropertiesFilePathDefault;
-            file = new FileInputStream(linkFile);
-            properties.load(file);
-            file.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setFile(relPropertiesFilePathDefault);
     }
 
     public static String getValue(String key) {
@@ -86,14 +77,11 @@ public class PropertiesHelpers {
                 properties.load(file);
                 file.close();
             }
-            // Get value from file
             keyValue = properties.getProperty(key);
-            return LanguageUtils.convertCharset_ISO_8859_1_To_UTF8(keyValue);
-            //return keyValue;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return keyValue;
         }
+        return keyValue;
     }
 
     public static void setValue(String key, String keyValue) {
@@ -105,7 +93,6 @@ public class PropertiesHelpers {
                 file.close();
                 out = new FileOutputStream(SystemHelpers.getCurrentDir() + relPropertiesFilePathDefault);
             }
-            //Write to the same Prop file as the extracted file
             out = new FileOutputStream(linkFile);
             System.out.println(linkFile);
             properties.setProperty(key, keyValue);
@@ -115,5 +102,4 @@ public class PropertiesHelpers {
             System.out.println(e.getMessage());
         }
     }
-
 }
