@@ -11,21 +11,27 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 import java.util.Objects;
 
 @Log4j2
 public class BasePage {
+
     public static WebElement getWebElement(By by) {
         return DriverManager.getDriver().findElement(by);
     }
 
     public static void openWebsite(String URL) {
-        DriverManager.getDriver().get(URL);
-        waitForPageLoaded();
+        try {
+            DriverManager.getDriver().get(URL);
+            waitForPageLoaded();
 
-        log.info("Open website with URL: " + URL);
+            log.info("Open website with URL: " + URL);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     public static void setText(By by, String value) {
@@ -134,7 +140,7 @@ public class BasePage {
         }
     }
 
-    private static String getTextElement(By by) {
+    public static String getTextElement(By by) {
         return Objects.requireNonNull(waitForElementVisible(by)).getText();
     }
 

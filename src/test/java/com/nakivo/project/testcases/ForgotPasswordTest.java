@@ -11,14 +11,14 @@ public class ForgotPasswordTest extends BaseTest {
         commonPage = new CommonPage();
     }
 
-    @Test()
+    @Test
     public void Forgot_1_ForgotPasswordSuccess() {
         commonPage.getLoginPage().clickForgotThePasswordLink();
         commonPage.getForgotPasswordPage().verifyForgotThePasswordFormDisplayed();
         commonPage.getForgotPasswordPage().verifyForgotThePasswordLinkSuccess("nakivo");
     }
 
-    @Test()
+    @Test
     public void Forgot_2_ForgotPasswordFailWithInvalidInfo() {
         commonPage.getLoginPage().clickForgotThePasswordLink();
         commonPage.getForgotPasswordPage().verifyForgotThePasswordFormDisplayed();

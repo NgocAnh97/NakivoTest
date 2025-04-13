@@ -9,12 +9,15 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
+import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 
 import static com.nakivo.constants.FrameworkConstants.WAIT_PAGE_LOADED;
 
 public class BaseTest {
+    public static SoftAssert softAssert = new SoftAssert();
+
     @Parameters("browser")
     @BeforeMethod
     public void createDriver(@Optional("firefox") String browser) {
@@ -27,8 +30,7 @@ public class BaseTest {
 
     private WebDriver getBrowserDriver(String browser) {
         return switch (browser) {
-            case "chrome" -> new ChromeDriver();
-            case "firefox" -> new FirefoxDriver();
+            case "Firefox" -> new FirefoxDriver();
             case "Edge" -> new SafariDriver();
             default -> new ChromeDriver();
         };
@@ -36,7 +38,16 @@ public class BaseTest {
 
     @AfterMethod(alwaysRun = true)
     public void closeDriver() {
+        stopSoftAssertAll();
         DriverManager.quit();
+    }
+
+    public void softAssertEquals(String actual, String expect, String message) {
+        softAssert.assertEquals(actual, expect, message);
+    }
+
+    public void stopSoftAssertAll() {
+        softAssert.assertAll();
     }
 }
 

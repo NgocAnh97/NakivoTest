@@ -19,7 +19,7 @@ public class LoginPage extends CommonPage {
     public void openLoginPageLoadSuccessfully() {
         openWebsite("https://localhost:4443/c/login");
         waitForPageLoaded();
-        verifyElementVisible(loginPageLogo, "Login page logo is displayed");
+        verifyElementVisible(loginPageLogo, "Login page logo is displayed ");
 
         waitForElementVisible(usernameInput);
         waitForElementVisible(passwordInput);
