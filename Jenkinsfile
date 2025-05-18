@@ -6,11 +6,11 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/NgocAnh97/NakivoTest.git'
-            }
-        }
+//         stage('Checkout') {
+//             steps {
+//                 git 'https://github.com/NgocAnh97/NakivoTest.git'
+//             }
+//         }
 
         stage('Build & Test') {
             steps {
