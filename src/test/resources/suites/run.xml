@@ -1,12 +1,15 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
 <suite name="Regression Tests CMS">
+    <listeners>
+        <listener class-name="com.nakivo.listeners.TestListener"/>
+    </listeners>
     <test name="Login Test CMS">
         <parameter name="browser" value="firefox"/>
         <classes>
+            <class name="com.nakivo.project.testcases.LandingTest"/>
             <class name="com.nakivo.project.testcases.LoginTest"/>
             <class name="com.nakivo.project.testcases.ForgotPasswordTest"/>
         </classes>
     </test>
-
 </suite>
