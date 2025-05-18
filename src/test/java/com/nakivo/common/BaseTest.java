@@ -3,6 +3,7 @@ package com.nakivo.common;
 import com.nakivo.driver.DriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.annotations.AfterMethod;
@@ -21,7 +22,10 @@ public class BaseTest {
     @Parameters("browser")
     @BeforeMethod
     public void createDriver(@Optional("firefox") String browser) {
-        WebDriver driver = getBrowserDriver(browser);
+//        WebDriver driver = getBrowserDriver(browser);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless", "--disable-gpu", "--no-sandbox");
+        WebDriver driver = new ChromeDriver(options);
 
         DriverManager.setDriver(driver);
         DriverManager.getDriver().manage().window().maximize();

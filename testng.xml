@@ -5,7 +5,7 @@
         <listener class-name="com.nakivo.listeners.TestListener"/>
     </listeners>
     <test name="Login Test CMS">
-        <parameter name="browser" value="firefox"/>
+        <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.nakivo.project.testcases.LandingTest"/>
 <!--            <class name="com.nakivo.project.testcases.LoginTest"/>-->
