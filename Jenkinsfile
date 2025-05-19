@@ -1,7 +1,6 @@
 pipeline {
     agent any
-
-    environment {
+environment {
         REPORT_PATH = "target/surefire-reports"
     }
 
