@@ -27,7 +27,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'target/*.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'target/*/*.html', allowEmptyArchive: true
         }
         failure {
             echo "❌ Tests failed. Please check logs."
